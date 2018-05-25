@@ -1,0 +1,21 @@
+#cloud-config
+apt_update: true
+apt_upgrade: true
+timezone: Europe/Stockholm
+apt:
+  sources:
+    ansible:
+      source: "deb http://ppa.launchpad.net/ansible/ansible/ubuntu bionic main"
+      keyid: 7BB9C367 
+      filename: ansible.list
+packages:
+ - python
+ - python-pip
+ - unzip
+ - ansible
+ - git
+runcmd:
+ - timedatectl set-timezone Europe/Stockholm
+ - mkdir -p /etc/ansible/{roles,host_vars,group_vars,library,module_utils}
+output: {all: '| tee -a /var/log/cloud-init-output.log'}
+
