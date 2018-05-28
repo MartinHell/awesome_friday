@@ -17,6 +17,6 @@ packages:
 runcmd:
  - timedatectl set-timezone Europe/Stockholm
  - mkdir -p /etc/ansible/{roles,host_vars,group_vars,library,module_utils}
- - git clone https://github.com/MartinHell/ansible-create-file.git /etc/ansible/roles/
+ - git clone https://github.com/MartinHell/ansible-create-file.git /etc/ansible/roles/ansible-create-file
 output: {all: '| tee -a /var/log/cloud-init-output.log'}
 
