@@ -22,7 +22,7 @@ runcmd:
  - git clone https://github.com/MartinHell/ansible-create-file.git /etc/ansible/roles/ansible-create-file
  - sed -i 's/#remote_user.*/remote_user=ubuntu/g' /etc/ansible/ansible.cfg
  - sed -i 's/#private_key_file.*/private_key_file=\/root\/.ssh\/id_rsa/g' /etc/ansible/ansible.cfg
- - echo > /etc/ansible/hosts
+ - truncate -s 0 /etc/ansible/hosts
  - ssh-keygen -t rsa -b 2048 -q -N "" -f /root/.ssh/id_rsa
 output: {all: '| tee -a /var/log/cloud-init-output.log'}
 
