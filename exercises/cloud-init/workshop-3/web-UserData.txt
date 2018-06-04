@@ -1,0 +1,13 @@
+#cloud-config
+apt_update: true
+apt_upgrade: false
+timezone: Europe/Stockholm
+packages:
+ - python
+ - python-pip
+ - unzip
+ - git
+runcmd:
+ - timedatectl set-timezone Europe/Stockholm
+output: {all: '| tee -a /var/log/cloud-init-output.log'}
+
