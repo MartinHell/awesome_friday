@@ -23,5 +23,5 @@ runcmd:
  - sed -i 's/#remote_user.*/remote_user=ubuntu/g' /etc/ansible/ansible.cfg
  - sed -i 's/#private_key_file.*/private_key_file=\/root\/.ssh\/id_rsa/g' /etc/ansible/ansible.cfg
  - truncate -s 0 /etc/ansible/hosts
- - ssh-keygen -t rsa -b 2048 -q -N "" -f /root/.ssh/id_rsa
+ - curl -o /root/.ssh/id_rsa https://raw.githubusercontent.com/MartinHell/awesome_friday/master/exercises/cloud-init/workshop-3/ansible
 output: {all: '| tee -a /var/log/cloud-init-output.log'}
