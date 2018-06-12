@@ -1,0 +1,27 @@
+---
+mariadb_root_password: 'asecretpassword'
+mariadb_upstream_apt_src: true
+mariadb_version: '10.3'
+mariadb_mirror_domain: 'ftp.ddg.lth.se'
+mariadb_repository: "http://{{ mariadb_mirror_domain }}/mariadb/repo/{{ mariadb_version }}/{{ ansible_lsb.id | lower }}"
+
+mariadb_slow_query_log_enabled: false
+mariadb_slow_query_log_file: '/var/log/mysql/mysql_slow.log'
+mariadb_slow_query_time: 2
+
+mariadb_key_buffer_size: '256M'
+mariadb_max_allowed_packet: '64M'
+mariadb_table_open_cache: '256'
+mariadb_sort_buffer_size: '1M'
+mariadb_read_buffer_size: '1M'
+mariadb_read_rnd_buffer_size: '4M'
+mariadb_myisam_sort_buffer_size: '64M'
+mariadb_thread_cache_size: '8'
+mariadb_query_cache_size: '16M'
+
+mariadb_databases: ['webdb', 'testdb']
+mariadb_users:
+  - name: 'webuser'
+    password: 'testuserpassword'
+    priv: webdb.*:ALL
+    host: 'localhost'

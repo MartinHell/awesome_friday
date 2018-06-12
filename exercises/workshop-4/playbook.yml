@@ -1,0 +1,7 @@
+---
+- hosts: web
+  roles:
+    - ansible-role-apache
+    - ansible-role-php-versions
+    - ansible-role-php
+    - ansible-mysql
