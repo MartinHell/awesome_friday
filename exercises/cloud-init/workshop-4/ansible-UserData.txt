@@ -1,0 +1,30 @@
+#cloud-config
+apt_update: true
+apt_upgrade: false
+timezone: Europe/Stockholm
+apt:
+  sources:
+    ansible:
+      source: "deb http://ppa.launchpad.net/ansible/ansible/ubuntu bionic main"
+      keyid: 7BB9C367 
+      filename: ansible.list
+packages:
+ - python
+ - python-pip
+ - unzip
+ - ansible
+ - git
+runcmd:
+ - timedatectl set-timezone Europe/Stockholm
+ - mkdir /etc/ansible/roles
+ - mkdir /etc/ansible/host_vars
+ - mkdir /etc/ansible/group_vars
+ - git clone https://github.com/geerlingguy/ansible-role-apache.git /etc/ansible/roles/ansible-role-apache
+ - git clone https://github.com/geerlingguy/ansible-role-php-versions.git
+ - git clone https://github.com/geerlingguy/ansible-role-php.git
+ - git clone https://github.com/MartinHell/ansible-mysql.git 
+ - sed -i 's/#remote_user.*/remote_user=ubuntu/g' /etc/ansible/ansible.cfg
+ - sed -i 's/#private_key_file.*/private_key_file=\/root\/.ssh\/id_rsa/g' /etc/ansible/ansible.cfg
+ - truncate -s 0 /etc/ansible/hosts
+ - curl -o /root/.ssh/id_rsa https://raw.githubusercontent.com/MartinHell/awesome_friday/master/exercises/cloud-init/workshop-3/ansible
+output: {all: '| tee -a /var/log/cloud-init-output.log'}
