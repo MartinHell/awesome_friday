@@ -5,3 +5,4 @@
     - ansible-role-php-versions
     - ansible-role-php
     - ansible-mysql
+    - ansible-role-simple-webapp
