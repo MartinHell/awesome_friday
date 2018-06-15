@@ -7,10 +7,17 @@
     - ansible-role-php
     - ansible-mysql
   tasks:
+    - name: Copy sql files to webserver
+      copy:
+        src: /etc/ansible/files/webapp.sql
+        dest: /tmp/webapp.sql
+        owner: ubuntu
+        group: ubuntu
+        mode: 0644
     - name: Create database Tables
       mysql_db:
         name: webdb
         login_user: {{ simpleapp_db_user }}
         login_password: {{ simpleapp_db_password }}
         state: import
-        target: /etc/ansible/files/webapp.sql
+        target: /tmp/webapp.sql
