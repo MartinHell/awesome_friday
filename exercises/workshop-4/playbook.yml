@@ -1,8 +1,16 @@
 ---
 - hosts: web
   roles:
+    - ansible-role-simple-webapp
     - ansible-role-apache
     - ansible-role-php-versions
     - ansible-role-php
     - ansible-mysql
-    - ansible-role-simple-webapp
+  tasks:
+    - name: Create database Tables
+      mysql_db:
+        name: webdb
+        login_user: {{ simpleapp_db_user }}
+        login_password: {{ simpleapp_db_password }}
+        state: import
+        target: /etc/ansible/files/webapp.sql
