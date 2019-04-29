@@ -1,13 +1,4 @@
-cat << EOF > Dockerfile
-FROM python:3.6-jessie # Base
-WORKDIR /app # Set workdir/"homedir"
-COPY requirements.txt /app/ # Copy file FROM build-host
-COPY python.py /app/ # Copy file FROM build-host
-RUN pip install --no-cache-dir -r requirements.txt # Execute command DURING build
-CMD [ "python", "/app/python.py", "-c", "/app/config.yaml" ] # Execute command ON DEPLOY
-EOF
-
-docker build -t <name>:<tag> . # Build image with name+tag ( optional registry host ) 
+docker build -t <name>:<tag> -f build/Dockerfile build/ # Build image with name+tag ( optional registry host ) 
 
 docker run --rm -it <name>:<tag> bash # Run command with interfactive
  ps auxwf / top # Run command in container
