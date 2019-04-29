@@ -1,6 +1,8 @@
 docker build -t <name>:<tag> -f build/Dockerfile build/ # Build image with name+tag ( optional registry host ) 
 
 docker run --rm -it <name>:<tag> bash # Run command with interfactive
+docker run -d -n helloworld -p 8080:5000 <name>:<tag>
+docker exec -ti helloworld bash
  ps auxwf / top # Run command in container
  ip r s / ifconfig # Run command in container
 
