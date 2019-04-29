@@ -16,3 +16,7 @@ docker run --rm -it <name>:<tag> bash # Run command with interfactive
 docker run --rm -ti -v config-file:/app/config.yaml <name>:<tag> bash # Run command with interactive + mount file from host
 docker ps
 docker images
+
+
+docker run --name my-redis -d redis # Deploy Redis
+docker run -d -e 'REDIS_HOST=my-redis' --name send-server --link my-redis:my-redis -p 8080:1443 mozilla/send # Deploy send
