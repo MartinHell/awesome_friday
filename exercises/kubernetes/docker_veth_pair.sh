@@ -19,3 +19,4 @@ function veth_interface_for_container() {
   rm -f "/var/run/netns/${1}"
 }
 
+veth_interface_for_container $1
