@@ -1,15 +1,18 @@
 docker build -t <name>:<tag> -f build/Dockerfile build/ # Build image with name+tag ( optional registry host ) 
-
-docker run --rm -it <name>:<tag> bash # Run command with interfactive
+docker ps
+docker images
 docker run -d -n helloworld -p 8080:5000 <name>:<tag>
+
+brctl show
+
 docker exec -ti helloworld bash
  ps auxwf / top # Run command in container
  ip r s / ifconfig # Run command in container
 
+docker run --rm -it <name>:<tag> bash # Run command with interfactive
 docker run --rm -ti -v config-file:/app/config.yaml <name>:<tag> bash # Run command with interactive + mount file from host
-docker ps
-docker images
-
 
 docker run --name my-redis -d redis # Deploy Redis
 docker run -d -e 'REDIS_HOST=my-redis' --name send-server --link my-redis:my-redis -p 8080:1443 mozilla/send # Deploy send
+
+sudo ./docker_veth_pair.sh <docker name/id>
