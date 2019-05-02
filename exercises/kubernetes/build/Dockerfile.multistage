@@ -1,0 +1,25 @@
+FROM golang:1.10 as kaniko-builder
+WORKDIR /kaniko-builder/
+RUN mkdir -p /usr/local/go/src/github.com/GoogleContainerTools
+ADD kaniko /usr/local/go/src/github.com/GoogleContainerTools/kaniko 
+RUN cd /usr/local/go/src/github.com/GoogleContainerTools/kaniko && make out/executor && \
+    cp /usr/local/go/src/github.com/GoogleContainerTools/kaniko/out/executor /kaniko-builder/executor
+
+FROM busybox as busybox-builder
+RUN mkdir -p /busybox/bin && \
+    cp /bin/busybox /busybox/bin/busybox && \
+    /busybox/bin/busybox --install -s /busybox
+
+FROM scratch
+WORKDIR /kaniko/
+COPY --from=kaniko-builder /kaniko-builder/* .
+COPY ca-certificates.crt /kaniko/ssl/certs/
+COPY --from=busybox-builder /busybox /busybox/
+
+ENV HOME /root
+VOLUME /busybox
+
+ENV PATH /usr/local/bin:/busybox/bin/:/kaniko:/busybox
+ENV SSL_CERT_DIR=/kaniko/ssl/certs
+ENTRYPOINT ["/kaniko/executor"]
+
