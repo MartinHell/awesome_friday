@@ -1,0 +1,116 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: send
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: redis
+  namespace: send
+  labels:
+    infra: redis
+spec:
+  containers:
+  - name: redis
+    image: kubernetes/redis:v1
+    env:
+    - name: MASTER
+      value: "true"
+    ports:
+    - containerPort: 6379
+    resources:
+      limits:
+        cpu: "0.1"
+    volumeMounts:
+    - mountPath: /redis-master-data
+      name: data
+  volumes:
+    - name: data
+      emptyDir: {}
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: send
+  namespace: send
+  labels:
+    infra: send
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        infra: send
+    spec:
+      containers:
+      - name: send
+        image: mozilla/send:latest
+        ports:
+        - containerPort: 1443
+          protocol: TCP
+        resources:
+          limits:
+            cpu: "1"
+            memory: 1G
+            ephemeral-storage: 2G
+        env:
+        - name: REDIS_HOST
+          value: "redis-send"
+        - name: NODE_ENV
+          value: "production"
+        - name: MAX_FILE_SIZE
+          value: "100000000"
+        - name: ANON_MAX_FILE_SIZE
+          value: "100000000"
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    infra: send
+  name: send-svc
+  namespace: send
+spec:
+  type: ClusterIP
+  ports:
+  - port: 1443
+    targetPort: 1443
+  selector:
+    infra: send
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    infra: redis
+  name: redis-send
+  namespace: send
+spec:
+  type: ClusterIP
+  ports:
+  - port: 6379
+    targetPort: 6379
+  selector:
+    infra: redis
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: send
+  namespace: send
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  rules:
+  - host: send.domain.local
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: send-svc
+          servicePort: 1443
