@@ -1,0 +1,18 @@
+FROM pizzadeg:latest as deg
+# Dont actually do anything in this container
+
+FROM tomatsås:latest as sås
+# Dont actually do anything in this container
+
+FROM scratch
+WORKDIR /pizza
+COPY --from=deg /deg /pizza/deg 
+COPY --from=sås /sås /pizza/sås
+
+RUN cat /pizza/deg /pizza/sås /pizza/pizza
+RUN echo "salami" >> /pizza/pizza && \
+    echo "ost" >> /pizza/pizza
+
+RUN micra -e 750w -t 10m /pizza/pizza 
+
+CMD /pizza/pizza
