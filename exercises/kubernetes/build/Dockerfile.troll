@@ -9,10 +9,10 @@ WORKDIR /pizza
 COPY --from=deg /deg /pizza/deg 
 COPY --from=sås /sås /pizza/sås
 
-RUN cat /pizza/deg /pizza/sås /pizza/pizza
+RUN cat /pizza/deg /pizza/sås > /pizza/pizza
 RUN echo "salami" >> /pizza/pizza && \
     echo "ost" >> /pizza/pizza
 
-RUN micra -e 750w -t 10m /pizza/pizza 
+RUN micra -e 750w -t 3m /pizza/pizza 
 
 CMD /pizza/pizza
